@@ -2,10 +2,10 @@ const EventEmitter = require("events");
 const eventEmitter = new EventEmitter();
 
 const countDown = (time_str) => {
-    var time_arr = time_str.split('-');
-    var date = new Date(time_arr[4], time_arr[3]-1, time_arr[2], time_arr[1], time_arr[0]);
-    var now = new Date();
-    var diff = date - now;
+    const time_arr = time_str.split('-');
+    const date = new Date(time_arr[3], time_arr[2]-1, time_arr[1], time_arr[0]);
+    const now = new Date();
+    const diff = date - now;
 
     if (diff < 0) {
         return "time's up";
@@ -15,7 +15,7 @@ const countDown = (time_str) => {
 }
 
 
-const times = ["05-22-22-05-2022", "06-22-22-05-2022", "07-22-22-05-2022"];
+const times = process.argv.slice(2);
 
 eventEmitter.on("timer", (payload) => { console.log(payload) });
 
