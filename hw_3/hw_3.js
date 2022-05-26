@@ -11,7 +11,6 @@ const transformStream = new Transform({
     transform(chank, encoding, callback) {
         const transformChank = chank
             .toString()
-            //.replace(new RegExp("\n\nText afer read", "g"), "");
             .match(/(^.*89\.123\.1\.41.*$|^.*34\.48\.240\.111.*$)/gm)
             .join("\n");
         callback(null, transformChank);
