@@ -1,3 +1,5 @@
 /node_modules/
 /package.json
 /package-lock.json
+/hw_3/access.log
+/hw_3/procesed.log
