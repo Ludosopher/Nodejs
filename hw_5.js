@@ -23,8 +23,8 @@ const server = http.createServer((req, res) => {
             }
         }
 
-        const filePathIndex = path.join("C:\\Users\\User\\projects\\nodejs", "./index.html");
-        const filePathPattern = path.join("C:\\Users\\User\\projects\\nodejs", "./pattern.html");
+        const filePathIndex = path.join(__dirname, "./index.html");
+        const filePathPattern = path.join(__dirname, "./pattern.html");
         const readStreamPattern = fs.createReadStream(filePathPattern, 'utf-8');
         const writeStream = fs.createWriteStream(filePathIndex, {
             flags: 'w',
