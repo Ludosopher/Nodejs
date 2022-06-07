@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Socket</title>
+        <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"
+                integrity="sha384-gDaozqUvc4HTgo8iZjwth73C6dDDeOJsAgpxBcMpZYztUfjHXpzrpdrHRdVp8ySO" 
+                crossorigin="anonymous">
+        </script>
+    </head>
+    <body>
+        <h2>Chat</h2>
+        <div>Enter your nicname:</div>
+        <input id="input_nic" type="text" autofocus /><br><br>
+        <div>Enter your message:</div>
+        <input id="input" type="text" autofocus />
+        <button id="button">Send</button>
+        <div id="messages"></div>
+        <br>
+        <div>Number of visitors: <span id="user_counter"></span></div>
+        <br>
+        <h2>Search by files</h2>
+        <div>Enter file path (in project directory):</div>
+        <input id="input_filepath" type="text" autofocus />
+        <br>
+        <div>Enter a search query:</div>
+        <input id="input_searchquery" type="text" autofocus />
+        <button id="button_search">Search</button>
+        <div id="search_result"></div>
+
+        <script>
+            const socket = io("localhost:3000");
+            const messageBlock = document.querySelector("#messages");
+            const button = document.querySelector("#button");
+            const button_search = document.querySelector("#button_search");
+            const input = document.querySelector("#input");
+            const input_nic = document.querySelector("#input_nic");
+            const user_counter = document.querySelector("#user_counter");
+            const input_filepath = document.querySelector("#input_filepath");
+            const input_searchquery = document.querySelector("#input_searchquery");
+            const search_result = document.querySelector("#search_result");
+            
+            button_search.addEventListener("click", () => {
+                const data = {
+                    path: input_filepath.value,
+                    query: input_searchquery.value,
+                };
+                socket.emit("searchData", data);
+            });
+
+            button.addEventListener("click", () => {
+                const data = {
+                    nicname: input_nic.value,
+                    message: input.value,
+                };
+                socket.emit("newMessage", data);
+            });
+
+            socket.on("connect", () => {
+                console.log("Connected to chat!");
+            });
+
+            socket.on("newMessage", (data) => {
+                input.value = "";
+                messageBlock.insertAdjacentHTML(
+                    "beforeend",
+                    `<div><b>${data.nicname}: </b>${data.message}</div>`
+                );
+                user_counter.innerHTML = "";
+                user_counter.insertAdjacentHTML(
+                    "beforeend",
+                    `<span>${data.userCounter}</span>`
+                );
+            });
+            socket.on("newConnect", (connectMessage) => {
+                console.log(connectMessage);
+            });
+            socket.on("newDisconnect", (disconnectMessage) => {
+                console.log(disconnectMessage);
+            });
+            socket.on("userCount", (count) => {
+                 user_counter.innerHTML = "";   
+                user_counter.insertAdjacentHTML(
+                    "beforeend",
+                    `<span>${count}</span>`
+                );
+            });
+            socket.on("searchData", (result) => {
+                search_result.innerHTML = "";
+
+                search_result.insertAdjacentHTML(
+                    "beforeend",
+                    `<p style="white-space: pre-line">${result}</p>`
+                );
+            });
+                  
+        </script>
+    </body>
+</html>
